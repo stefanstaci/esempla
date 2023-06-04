@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-user-authority
+      author: Stefan
+      changes:
+        - createTable:
+            tableName: user-authority
+            columns:
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    foreignKeyName: fk_user_id
+                    references: user(id)
+              - column:
+                  name: authority_name
+                  type: varchar(50)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    foreignKeyName: fk_authority_name
+                    references: authority(name)

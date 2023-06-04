@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-storage-fie
+      author: Stefan
+      changes:
+        - createTable:
+            tableName: storage_file
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: size
+                  type: int
+              - column:
+                  name: mime_type
+                  type: varchar(255)
+              - column:
+                  name: path
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: varchar(50)
+                  constraints:
+                    foreignKeyName: fk_user_login
+                    references: user(login)
+              - column:
+                  name: created_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
