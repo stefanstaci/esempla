@@ -41,4 +41,11 @@ public class FileController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(IOUtils.toByteArray(minioService.getObject(filename)));
     }
+
+    @DeleteMapping(value = "/**")
+    public void deleteFile(HttpServletRequest request){
+        String pattern = (String) request.getAttribute(BEST_MATCHING_PATTERN_ATTRIBUTE);
+        String filename = new AntPathMatcher().extractPathWithinPattern(pattern, request.getServletPath());
+        minioService.deleteFile(filename);
+    }
 }

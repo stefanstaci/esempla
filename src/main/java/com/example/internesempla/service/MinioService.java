@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +73,16 @@ public class MinioService {
         }
 
         return stream;
+    }
+
+    public void deleteFile(String filename) {
+        try {
+            minioClient.removeObject(RemoveObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(filename)
+                    .build());
+        } catch (Exception ignored) {
+        }
     }
 
     private String getPreSignedUrl(String filename) {
