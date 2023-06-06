@@ -1,22 +1,27 @@
 package com.example.internesempla.service;
 
 import com.example.internesempla.dto.FileDto;
+import com.example.internesempla.entity.StorageFileEntity;
+import com.example.internesempla.repository.StorageFileRepository;
 import io.minio.*;
 import io.minio.messages.Item;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MinioService {
     private final MinioClient minioClient;
+    private final StorageFileRepository storageFileRepository;
 
-    public MinioService(MinioClient minioClient) {
+    public MinioService(MinioClient minioClient, StorageFileRepository storageFileRepository) {
         this.minioClient = minioClient;
+        this.storageFileRepository = storageFileRepository;
     }
 
     @Value("${minio.bucket.name}")
@@ -53,6 +58,12 @@ public class MinioService {
                     .build());
         } catch (Exception ignored) {
         }
+        StorageFileEntity storageFile = new StorageFileEntity();
+        storageFile.setName(request.getTitle());
+        storageFile.setSize((int) request.getFile().getSize());
+        storageFile.setPath(request.getFile().getOriginalFilename());
+        storageFileRepository.save(storageFile);
+
         return new FileDto.Builder()
                 .setTitle(request.getTitle())
                 .setSize(request.getFile().getSize())
@@ -75,12 +86,15 @@ public class MinioService {
         return stream;
     }
 
+    @Transactional
     public void deleteFile(String filename) {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder()
                     .bucket(bucketName)
                     .object(filename)
                     .build());
+
+            storageFileRepository.deleteByPath(filename);
         } catch (Exception ignored) {
         }
     }

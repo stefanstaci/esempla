@@ -1,6 +1,8 @@
 package com.example.internesempla.entity;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Timestamp;
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "user")
-public class UserEntity {
+public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -89,6 +91,11 @@ public class UserEntity {
         this.roles = roles;
         this.files = files;
         this.reservations = reservations;
+    }
+
+    public UserEntity(String login, String password) {
+        this.login = login;
+        this.passwordHash = password;
     }
 
     public Integer getId() {
@@ -241,5 +248,40 @@ public class UserEntity {
 
     public void setReservations(List<UserReservationEntity> reservations) {
         this.reservations = reservations;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
