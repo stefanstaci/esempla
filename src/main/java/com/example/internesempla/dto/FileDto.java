@@ -3,10 +3,12 @@ package com.example.internesempla.dto;
 import io.minio.DownloadObjectArgs;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 public class FileDto implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 232836038145089522L;
 
     private String title;

@@ -21,13 +21,32 @@ spring:
   servlet:
     multipart:
       max-file-size: 2MB
+  mail:
+    host: smtp.office365.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        from: ${spring.mail.username}
+        smtp:
+          starttls:
+            enable: true
+    test-connection: on
 
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 604800000 # 7 days
   # Minio
 minio:
   bucket:
     name: test
   access:
-    key: admin
-    secret: password
-  url: https://play.min.io
+    key: minioadmin
+    secret: minioadmin
+  url: http://127.0.0.1:9000
 
