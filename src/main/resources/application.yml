@@ -24,8 +24,8 @@ spring:
   mail:
     host: smtp.office365.com
     port: 587
-    username: stacistefan1@outlook.com
-    password: q12we34r
+    username: 
+    password: 
     properties:
       mail:
         from: ${spring.mail.username}
