@@ -4,6 +4,7 @@ import com.example.internesempla.dto.AuthenticationRequest;
 import com.example.internesempla.dto.AuthenticationResponse;
 import com.example.internesempla.dto.RegistrationRequest;
 import com.example.internesempla.entity.UserEntity;
+import com.example.internesempla.enumeration.RoleEnum;
 import com.example.internesempla.jwt.JWTService;
 import com.example.internesempla.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -35,16 +36,18 @@ public class UserService {
         var userEntity = new UserEntity(0,
                 registrationRequest.login(),
                 registrationRequest.email(),
+                registrationRequest.firstName(),
+                registrationRequest.lastName(),
                 passwordEncoder.encode(registrationRequest.password()),
                 RoleEnum.USER,
                 UUID.randomUUID().toString(),
                 false
         );
 
-        var usernameAlreadyExist = userRepository.findByLogin(userEntity.getUsername());
+        var loginAlreadyExist = userRepository.findByLogin(userEntity.getLogin());
         var emailAlreadyExist = userRepository.findByEmail(userEntity.getEmail());
 
-        if(usernameAlreadyExist.isPresent()){
+        if(loginAlreadyExist.isPresent()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists!");
         }
 
@@ -67,9 +70,9 @@ public class UserService {
                 )
         );
 
-        var userEntiy = this.userRepository.findByLogin(authenticationRequest.login()).orElseThrow();
+        var userEntity = this.userRepository.findByLogin(authenticationRequest.login()).orElseThrow();
 
-        return new AuthenticationResponse(jwtService.generateToken(userEntiy));
+        return new AuthenticationResponse(jwtService.generateToken(userEntity));
     }
 
 //    public UserEntity activateUser(String code) {
