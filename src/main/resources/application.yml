@@ -5,9 +5,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/esempla
+    username: postgres
+    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -24,8 +24,8 @@ spring:
   mail:
     host: smtp.office365.com
     port: 587
-    username: ${EMAIL_USERNAME}
-    password: ${EMAIL_PASSWORD}
+    username: stacistefan1@outlook.com
+    password: q12we34r
     properties:
       mail:
         from: ${spring.mail.username}
@@ -37,16 +37,14 @@ spring:
 application:
   security:
     jwt:
-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      secret-key: 77397A24432646294A404E635266556A586E3272357538782F4125442A472D4B
       expiration: 86400000 # a day
       refresh-token:
         expiration: 604800000 # 7 days
-  # Minio
-minio:
-  bucket:
-    name: test
-  access:
-    key: minioadmin
-    secret: minioadmin
-  url: http://127.0.0.1:9000
-
+  minio:
+    bucket:
+      name: test
+    access:
+      key: minioadmin
+      secret: minioadmin
+    url: http://127.0.0.1:9000

@@ -2,6 +2,7 @@ package com.example.internesempla.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -17,13 +18,12 @@ public class StorageFileEntity {
     @ManyToOne()
     @JoinColumn(name = "created_by", referencedColumnName = "login")
     private UserEntity createdBy;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private LocalDate createdDate;
 
     public StorageFileEntity() {
     }
 
-    public StorageFileEntity(String name, Integer size, String mimeType, String path, UserEntity createdBy, Date createdDate) {
+    public StorageFileEntity(String name, Integer size, String mimeType, String path, UserEntity createdBy, LocalDate createdDate) {
         this.name = name;
         this.size = size;
         this.mimeType = mimeType;
@@ -32,7 +32,7 @@ public class StorageFileEntity {
         this.createdDate = createdDate;
     }
 
-    public StorageFileEntity(Integer id, String name, Integer size, String mimeType, String path, UserEntity createdBy, Date createdDate) {
+    public StorageFileEntity(Integer id, String name, Integer size, String mimeType, String path, UserEntity createdBy, LocalDate createdDate) {
         this.id = id;
         this.name = name;
         this.size = size;
@@ -90,11 +90,11 @@ public class StorageFileEntity {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedDate() {
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 }

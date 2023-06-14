@@ -24,7 +24,7 @@ public class MinioService {
         this.storageFileRepository = storageFileRepository;
     }
 
-    @Value("${minio.bucket.name}")
+    @Value("${application.minio.bucket.name}")
     private String bucketName;
 
     public List<FileDto> getListObjects() {

@@ -2,6 +2,7 @@ package com.example.internesempla.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -17,13 +18,12 @@ public class UserReservationEntity {
     private UserEntity userId;
     private Boolean activated;
     private String createdBy;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private LocalDate createdDate;
 
     public UserReservationEntity() {
     }
 
-    public UserReservationEntity(Integer totalSize, Integer usedSize, UserEntity userId, Boolean activated, String createdBy, Date createdDate) {
+    public UserReservationEntity(Integer totalSize, Integer usedSize, UserEntity userId, Boolean activated, String createdBy, LocalDate createdDate) {
         this.totalSize = totalSize;
         this.usedSize = usedSize;
         this.userId = userId;
@@ -32,7 +32,7 @@ public class UserReservationEntity {
         this.createdDate = createdDate;
     }
 
-    public UserReservationEntity(Integer id, Integer totalSize, Integer usedSize, UserEntity userId, Boolean activated, String createdBy, Date createdDate) {
+    public UserReservationEntity(Integer id, Integer totalSize, Integer usedSize, UserEntity userId, Boolean activated, String createdBy, LocalDate createdDate) {
         this.id = id;
         this.totalSize = totalSize;
         this.usedSize = usedSize;
@@ -90,11 +90,11 @@ public class UserReservationEntity {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedDate() {
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 }

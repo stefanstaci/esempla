@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="create-user" author="stefan">
+<!--        <sql>DROP CAST IF EXISTS (VARCHAR AS role_enum);</sql>-->
+<!--        <sql>DROP TYPE IF EXISTS role_enum;</sql>-->
+<!--        <sql>CREATE TYPE role_enum AS ENUM ('USER','ADMIN')</sql>-->
+<!--        <sql>CREATE CAST (VARCHAR AS role_enum) WITH INOUT AS IMPLICIT</sql>-->
+
+        <createTable tableName="user">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password_hash" type="varchar(70)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="roles" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_url" type="varchar(256)">
+            </column>
+            <column name="activated" type="bool">
+            </column>
+            <column name="lang_key" type="varchar(50)">
+            </column>
+            <column name="activation_key" type="varchar(50)">
+            </column>
+            <column name="reset_key" type="varchar(50)">
+            </column>
+            <column name="created_by" type="varchar(50)">
+            </column>
+            <column name="created_date" type="date">
+            </column>
+            <column name="reset_date" type="date">
+            </column>
+            <column name="last_modified_by" type="varchar(50)">
+            </column>
+            <column name="last_modified_date" type="date">
+            </column>
+        </createTable>
+        <addAutoIncrement tableName="user" columnName="id"/>
+    </changeSet>
+</databaseChangeLog>
