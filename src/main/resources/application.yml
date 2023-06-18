@@ -22,15 +22,16 @@ spring:
     multipart:
       max-file-size: 2MB
   mail:
-    host: smtp.office365.com
+    host: smtp.gmail.com
     port: 587
-    username: 
-    password: 
+    username: stefanstaci1@gmail.com
+    password: ejdzjmebkzvkvmci
     properties:
       mail:
-        from: ${spring.mail.username}
+        from: stefanstaci1@gmail.com
         smtp:
           starttls:
+            auth: true
             enable: true
     test-connection: on
 

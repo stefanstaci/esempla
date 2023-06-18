@@ -55,9 +55,9 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists!");
         }
         var token = jwtService.generateToken(userEntity);
-//        var message = String.format(
-//                "press on link to activate your account http://localhost:9090/api/auth/activate/%s", userEntity.getActivationCode());
-//        mailService.sendMail(userEntity.getEmail(), "Verification email", message);
+        var message = String.format(
+                "press on link to activate your account http://localhost:9090/api/auth/activate/%s", userEntity.getActivationKey());
+        mailService.sendMail(userEntity.getEmail(), "Verification email", message);
         userRepository.save(userEntity);
         return new AuthenticationResponse(token);
     }
@@ -75,9 +75,9 @@ public class UserService {
         return new AuthenticationResponse(jwtService.generateToken(userEntity));
     }
 
-//    public UserEntity activateUser(String code) {
-//        UserEntity user = userRepository.findByActivationCode(code).orElseThrow(() -> new IllegalStateException("Not activated"));
-//        user.setIsActivated(true);
-//        return userRepository.save(user);
-//    }
+    public UserEntity activateUser(String code) {
+        UserEntity user = (UserEntity) userRepository.findByActivationKey(code).orElseThrow(() -> new IllegalStateException("Not activated"));
+        user.setActivated(true);
+        return userRepository.save(user);
+    }
 }

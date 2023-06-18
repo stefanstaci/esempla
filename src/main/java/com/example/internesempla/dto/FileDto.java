@@ -8,8 +8,8 @@ import java.io.Serializable;
 
 public class FileDto implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 232836038145089522L;
+//    @Serial
+//    private static final long serialVersionUID = 232836038145089522L;
 
     private String title;
 
@@ -21,6 +21,7 @@ public class FileDto implements Serializable {
     private Long size;
 
     private String filename;
+    private Integer userId;
 
     public FileDto() {
     }
@@ -47,6 +48,14 @@ public class FileDto implements Serializable {
 
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getUrl() {

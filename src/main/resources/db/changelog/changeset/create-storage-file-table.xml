@@ -14,23 +14,19 @@
             <column name="size" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="mime_type" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="mime_type" type="varchar(255)"/>
             <column name="path" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="created_by" type="varchar(50)">
                 <constraints
-                        nullable="false"
                         foreignKeyName="fk_user_login"
                         references="user(login)"
                 />
             </column>
-            <column name="created_date" type="date">
-                <constraints nullable="false"/>
-            </column>
+            <column name="created_date" type="date"/>
         </createTable>
+        <addAutoIncrement tableName="storage_file" columnName="id"/>
     </changeSet>
 
 </databaseChangeLog>

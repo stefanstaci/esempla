@@ -1,9 +1,12 @@
 package com.example.internesempla.repository;
 
 import com.example.internesempla.entity.StorageFileEntity;
+import com.example.internesempla.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StorageFileRepository extends JpaRepository<StorageFileEntity, Integer> {
-    void deleteByPath(String path);
+import java.util.Optional;
 
+public interface StorageFileRepository extends JpaRepository<StorageFileEntity, Integer> {
+    void deleteByName(String name);
+    Optional<StorageFileEntity> findByPath(String path);
 }

@@ -2,7 +2,6 @@ package com.example.internesempla.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,21 +32,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader(HEADER_STRING);
-        String jwToken = null;
+        final String jwToken;
         final String userName;
 
-        var cookies = request.getCookies();
-        if (nonNull(request.getCookies())) {
-            jwToken = Stream.of(request.getCookies())
-                    .filter(cookie -> cookie.getName().equals("token"))
-                    .findFirst()
-                    .map(Cookie::getValue)
-                    .orElse(null);
-        }else {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
             return;
         }
 
+        jwToken = authHeader.substring(lengthOfBearerWithSpace);
         userName = jwtService.extractUserName(jwToken);
 
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null){

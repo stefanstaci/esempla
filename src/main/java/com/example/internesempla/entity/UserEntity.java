@@ -7,10 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "user", schema = "public")
@@ -289,4 +286,41 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof UserEntity user)) return false;
+//        return getId().equals(user.getId()) && getLogin().equals(user.getLogin()) && getPasswordHash().equals(user.getPasswordHash()) && getFirstName().equals(user.getFirstName()) && getLastName().equals(user.getLastName()) && getEmail().equals(user.getEmail()) && getRoles() == user.getRoles() && Objects.equals(getImageUrl(), user.getImageUrl()) && Objects.equals(getActivated(), user.getActivated()) && Objects.equals(getLangKey(), user.getLangKey()) && Objects.equals(getActivationKey(), user.getActivationKey()) && Objects.equals(getResetKey(), user.getResetKey()) && Objects.equals(getCreatedBy(), user.getCreatedBy()) && Objects.equals(getCreatedDate(), user.getCreatedDate()) && Objects.equals(getResetDate(), user.getResetDate()) && Objects.equals(getLastModifiedBy(), user.getLastModifiedBy()) && Objects.equals(getLastModifiedDate(), user.getLastModifiedDate());
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(getId(), getLogin(), getPasswordHash(), getFirstName(), getLastName(), getEmail(), getRoles(), getImageUrl(), getActivated(), getLangKey(), getActivationKey(), getResetKey(), getCreatedBy(), getCreatedDate(), getResetDate(), getLastModifiedBy(), getLastModifiedDate());
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "UserEntity{" +
+//                "id=" + id +
+//                ", login='" + login + '\'' +
+//                ", passwordHash='" + passwordHash + '\'' +
+//                ", firstName='" + firstName + '\'' +
+//                ", lastName='" + lastName + '\'' +
+//                ", email='" + email + '\'' +
+//                ", roles=" + roles +
+//                ", imageUrl='" + imageUrl + '\'' +
+//                ", activated=" + activated +
+//                ", langKey='" + langKey + '\'' +
+//                ", activationKey='" + activationKey + '\'' +
+//                ", resetKey='" + resetKey + '\'' +
+//                ", createdBy='" + createdBy + '\'' +
+//                ", createdDate=" + createdDate +
+//                ", resetDate=" + resetDate +
+//                ", lastModifiedBy='" + lastModifiedBy + '\'' +
+//                ", lastModifiedDate=" + lastModifiedDate +
+//                '}';
+//    }
 }
+
+
