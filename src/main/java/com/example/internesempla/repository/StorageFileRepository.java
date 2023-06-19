@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface StorageFileRepository extends JpaRepository<StorageFileEntity, Integer> {
     void deleteByName(String name);
     Optional<StorageFileEntity> findByPath(String path);
+
+    StorageFileEntity findByName(String filename);
 }

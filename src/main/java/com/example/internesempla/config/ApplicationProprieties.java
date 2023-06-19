@@ -1,32 +1,15 @@
 package com.example.internesempla.config;
 
-import io.minio.MinioClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 @Configuration
 @ConfigurationProperties("minio")
-public class MinioConfiguration {
-
+public class ApplicationProprieties {
     private String accessKey;
-
     private String secretKey;
-
     private String minioUrl;
-
-
-    @Bean
-    @Primary
-    public MinioClient minioClient() {
-        return new MinioClient.Builder()
-                .credentials(accessKey, secretKey)
-                .endpoint(minioUrl)
-                .build();
-    }
-
+    private String bucketName;
 
     public String getAccessKey() {
         return accessKey;
@@ -52,5 +35,12 @@ public class MinioConfiguration {
         this.minioUrl = minioUrl;
     }
 
+    public String getBucketName() {
+        return bucketName;
+    }
+
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
+    }
 }
 

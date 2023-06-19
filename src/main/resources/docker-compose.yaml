@@ -1,0 +1,23 @@
+#version: '2'
+#services:
+#  db:
+#    image: 'postgres:10'
+#    container_name: 'db'
+#    environment:
+#      - 'POSTGRES_USER=postgres'
+#      - 'POSTGRES_PASSWORD=postgres'
+#      - 'POSTGRES_DB=esempla'
+#    ports:
+#      - 5432:5432
+#  app:
+#    image: ''
+#    container_name: 'esempla'
+#    depends_on:
+#      - db
+#    ports:
+#      - 9090:9090
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/esempla
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=postgres
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=update

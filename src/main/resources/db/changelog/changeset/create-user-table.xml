@@ -4,10 +4,6 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <changeSet id="create-user" author="stefan">
-<!--        <sql>DROP CAST IF EXISTS (VARCHAR AS role_enum);</sql>-->
-<!--        <sql>DROP TYPE IF EXISTS role_enum;</sql>-->
-<!--        <sql>CREATE TYPE role_enum AS ENUM ('USER','ADMIN')</sql>-->
-<!--        <sql>CREATE CAST (VARCHAR AS role_enum) WITH INOUT AS IMPLICIT</sql>-->
 
         <createTable tableName="user">
             <column name="id" type="int">

@@ -1,45 +1,55 @@
 package com.example.internesempla.service;
 
-import com.example.internesempla.dto.AuthenticationRequest;
+import com.example.internesempla.config.ApplicationProprieties;
+import com.example.internesempla.controller.AuthenticationController;
 import com.example.internesempla.dto.FileDto;
 import com.example.internesempla.entity.StorageFileEntity;
 import com.example.internesempla.entity.UserEntity;
+import com.example.internesempla.enumeration.RoleEnum;
 import com.example.internesempla.repository.StorageFileRepository;
 import com.example.internesempla.repository.UserRepository;
 import io.minio.*;
+import io.minio.errors.*;
 import io.minio.messages.Item;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.naming.NoPermissionException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MinioService {
     private final MinioClient minioClient;
     private final StorageFileRepository storageFileRepository;
     private final UserRepository userRepository;
+    private final ApplicationProprieties applicationProprieties;
+    private final MailService mailService;
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
-    public MinioService(MinioClient minioClient, StorageFileRepository storageFileRepository, UserRepository userRepository) {
+
+    public MinioService(MinioClient minioClient, StorageFileRepository storageFileRepository, UserRepository userRepository, ApplicationProprieties applicationProprieties, MailService mailService) {
         this.minioClient = minioClient;
         this.storageFileRepository = storageFileRepository;
         this.userRepository = userRepository;
+        this.applicationProprieties = applicationProprieties;
+        this.mailService = mailService;
     }
-
-    @Value("${application.minio.bucket.name}")
-    private String bucketName;
 
     public List<FileDto> getListObjects() {
         List<FileDto> objects = new ArrayList<>();
         try {
             Iterable<Result<Item>> result = minioClient.listObjects(ListObjectsArgs.builder()
-                    .bucket(bucketName)
+                    .bucket(applicationProprieties.getBucketName())
                     .recursive(true)
                     .build());
             for (Result<Item> item : result) {
@@ -59,7 +69,7 @@ public class MinioService {
     public FileDto uploadFile(FileDto request) {
         try {
             minioClient.putObject(PutObjectArgs.builder()
-                    .bucket(bucketName)
+                    .bucket(applicationProprieties.getBucketName())
                     .object(request.getFile().getOriginalFilename())
                     .stream(request.getFile().getInputStream(), request.getFile().getSize(), -1)
                     .build());
@@ -74,7 +84,7 @@ public class MinioService {
         storageFile.setCreatedBy((UserEntity) auth.getPrincipal());
         storageFile.setCreatedDate(LocalDate.now());
         var exist = storageFileRepository.findByPath(storageFile.getPath());
-        if (exist.isEmpty()){
+        if (exist.isEmpty()) {
             storageFileRepository.save(storageFile);
         }
 
@@ -88,13 +98,21 @@ public class MinioService {
 
     public InputStream getObject(String filename) {
         InputStream stream;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getPrincipal().equals(userRepository.findByRoles(RoleEnum.ADMIN));
+        boolean havePermission = auth.getPrincipal().equals(storageFileRepository.findByName(filename).getCreatedBy());
         try {
-            stream = minioClient.getObject(GetObjectArgs.builder()
-                    .bucket(bucketName)
+            if (havePermission || isAdmin) {
+                stream = minioClient.getObject(GetObjectArgs.builder()
+                    .bucket(applicationProprieties.getBucketName())
                     .object(filename)
                     .build());
+            } else {
+                logger.info("not permission for downloading file");
+                throw new NoPermissionException();
+            }
         } catch (Exception e) {
-            return null;
+            throw new RuntimeException();
         }
 
         return stream;
@@ -103,17 +121,33 @@ public class MinioService {
     @Transactional
     public void deleteFile(String filename) {
         try {
-            minioClient.removeObject(RemoveObjectArgs.builder()
-                    .bucket(bucketName)
-                    .object(filename)
-                    .build());
-            storageFileRepository.deleteByName(filename);
-        } catch (Exception ignored) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            boolean isAdmin = auth.getPrincipal().equals(userRepository.findByRoles(RoleEnum.ADMIN));
+            boolean havePermission = auth.getPrincipal().equals(storageFileRepository.findByName(filename).getCreatedBy());
+            if (havePermission || isAdmin) {
+                minioClient.removeObject(RemoveObjectArgs.builder()
+                        .bucket(applicationProprieties.getBucketName())
+                        .object(filename)
+                        .build());
+                storageFileRepository.deleteByName(filename);
+                logger.info("file deleted");
+            } else {
+                logger.info("not permission for deleting file");
+                throw new NoPermissionException();
+            }
+        } catch (ErrorResponseException | InsufficientDataException | InternalException |
+                 InvalidKeyException | InvalidResponseException | IOException | NoSuchAlgorithmException |
+                 ServerException | XmlParserException e) {
+            System.out.println(e.getMessage());
+        } catch (NoPermissionException e) {
+            throw new RuntimeException(e);
         }
     }
 
     private String getPreSignedUrl(String filename) {
         return "http://localhost:9090/api/file/".concat(filename);
     }
+
+
 
 }

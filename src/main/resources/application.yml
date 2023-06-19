@@ -25,7 +25,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: stefanstaci1@gmail.com
-    password: \
+    password: buwlseerveytdvqr
     properties:
       mail:
         from: stefanstaci1@gmail.com
@@ -34,6 +34,9 @@ spring:
             auth: true
             enable: true
     test-connection: on
+  output:
+    ansi:
+      enabled: detect
 
 application:
   security:
@@ -49,3 +52,13 @@ application:
       key: minioadmin
       secret: minioadmin
     url: http://127.0.0.1:9000
+logging:
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    org.springframework.web: INFO
+    com.howtodoinjava: INFO
+    org.hibernate: ERROR
+  file:
+    name: spring-boot-logger.log
