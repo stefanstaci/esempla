@@ -1,5 +1,5 @@
 server:
-  port: 9090
+  port: 8080
   servlet:
     context-path: /api
 
@@ -56,9 +56,5 @@ logging:
   pattern:
     console: "%d %-5level %logger : %msg%n"
     file: "%d %-5level [%thread] %logger : %msg%n"
-  level:
-    org.springframework.web: INFO
-    com.howtodoinjava: INFO
-    org.hibernate: ERROR
   file:
     name: spring-boot-logger.log
