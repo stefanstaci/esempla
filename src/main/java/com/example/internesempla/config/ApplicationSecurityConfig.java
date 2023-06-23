@@ -1,6 +1,8 @@
 package com.example.internesempla.config;
 
 import com.example.internesempla.repository.UserRepository;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,7 +51,7 @@ public class ApplicationSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/js/**", "/images/**", "/webjars/**", "/static/**");
+        return (web) -> web.ignoring().requestMatchers("/js/**", "/images/**", "/webjars/**", "/static/**", "/swagger-ui/**","/v3/api-docs/**");
     }
 
 }

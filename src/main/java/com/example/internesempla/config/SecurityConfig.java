@@ -1,9 +1,12 @@
 package com.example.internesempla.config;
 
 import com.example.internesempla.jwt.JWTAuthenticationFilter;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -11,16 +14,18 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
-            "/authenticate",
+            "/authentication",
             "/swagger-resources/**",
             "/swagger-ui/**",
+            "/javainuse-openapi/**",
             "/v3/api-docs",
             "/webjars/**",
-            "/auth/**"
+            "/auth/**",
+            "/api/v3/api-docs/**",
+            "/api**"
     };
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;

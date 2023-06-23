@@ -145,9 +145,7 @@ public class MinioService {
     }
 
     private String getPreSignedUrl(String filename) {
-        return "http://localhost:9090/api/file/".concat(filename);
+        return "http://localhost:8080/api/file/".concat(filename);
     }
-
-
 
 }

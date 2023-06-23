@@ -7,6 +7,7 @@ import com.example.internesempla.entity.UserEntity;
 import com.example.internesempla.jwt.JWTService;
 import com.example.internesempla.service.UserService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/registration")
+    @SecurityRequirement(name = "JWT")
     public AuthenticationResponse registration(@RequestBody RegistrationRequest registrationRequest) {
         logger.info("user {} registered", registrationRequest.login());
         return userService.register(registrationRequest);

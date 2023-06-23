@@ -31,7 +31,6 @@ public class UserService {
         this.authenticationManager = authenticationManager;
         this.mailService = mailService;
     }
-//TODO : registration
     public AuthenticationResponse register(RegistrationRequest registrationRequest){
         var userEntity = new UserEntity(0,
                 registrationRequest.login(),
@@ -56,7 +55,7 @@ public class UserService {
         }
         var token = jwtService.generateToken(userEntity);
         var message = String.format(
-                "press on link to activate your account http://localhost:9090/api/auth/activate/%s", userEntity.getActivationKey());
+                "press on link to activate your account http://localhost:8080/api/auth/activate/%s", userEntity.getActivationKey());
         mailService.sendMail(userEntity.getEmail(), "Verification email", message);
         userRepository.save(userEntity);
         return new AuthenticationResponse(token);
