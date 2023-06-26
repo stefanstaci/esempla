@@ -23,13 +23,14 @@
             <column name="activated" type="bool">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_by" type="varchar(50)">
+            <column name="created_by" type="varchar(450)">
                 <constraints nullable="false"/>
             </column>
             <column name="created_date" type="date">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+        <addAutoIncrement tableName="user_reservation" columnName="id"/>
     </changeSet>
 
 </databaseChangeLog>

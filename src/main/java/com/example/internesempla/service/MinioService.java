@@ -8,6 +8,7 @@ import com.example.internesempla.entity.UserEntity;
 import com.example.internesempla.enumeration.RoleEnum;
 import com.example.internesempla.repository.StorageFileRepository;
 import com.example.internesempla.repository.UserRepository;
+import com.example.internesempla.repository.UserReservationRepository;
 import io.minio.*;
 import io.minio.errors.*;
 import io.minio.messages.Item;
@@ -34,15 +35,19 @@ public class MinioService {
     private final UserRepository userRepository;
     private final ApplicationProprieties applicationProprieties;
     private final MailService mailService;
+    private final UserReservationRepository userReservationRepository;
+    private final ReservationService reservationService;
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
 
-    public MinioService(MinioClient minioClient, StorageFileRepository storageFileRepository, UserRepository userRepository, ApplicationProprieties applicationProprieties, MailService mailService) {
+    public MinioService(MinioClient minioClient, StorageFileRepository storageFileRepository, UserRepository userRepository, ApplicationProprieties applicationProprieties, MailService mailService, UserReservationRepository userReservationRepository, ReservationService reservationService) {
         this.minioClient = minioClient;
         this.storageFileRepository = storageFileRepository;
         this.userRepository = userRepository;
         this.applicationProprieties = applicationProprieties;
         this.mailService = mailService;
+        this.userReservationRepository = userReservationRepository;
+        this.reservationService = reservationService;
     }
 
     public List<FileDto> getListObjects() {
@@ -84,6 +89,7 @@ public class MinioService {
         storageFile.setCreatedBy((UserEntity) auth.getPrincipal());
         storageFile.setCreatedDate(LocalDate.now());
         var exist = storageFileRepository.findByPath(storageFile.getPath());
+
         if (exist.isEmpty()) {
             storageFileRepository.save(storageFile);
         }
