@@ -3,10 +3,8 @@ package com.example.internesempla.service;
 import com.example.internesempla.dto.ReservationDto;
 import com.example.internesempla.entity.UserEntity;
 import com.example.internesempla.entity.UserReservationEntity;
-import com.example.internesempla.enumeration.RoleEnum;
 import com.example.internesempla.repository.UserRepository;
 import com.example.internesempla.repository.UserReservationRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class ReservationService {
@@ -45,9 +41,8 @@ public class ReservationService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "you already demanded size!");
         } else {
             reservationRepository.save(userReservation);
-//        String email = String.valueOf(((UserEntity) auth.getPrincipal()).getEmail());
             var message = String.format(
-                    "press on link to activate your account http://localhost:8090/api/size/activate/%s", userReservation.getUserId().getId());
+                    "press on link to activate your account http://localhost:8080/api/size/activate/%s", userReservation.getUserId().getId());
             mailService.sendMail("stefan.staci.md@gmail.com", "activate size", message);
             return new ReservationDto(
                     userReservation.getId(),
@@ -59,21 +54,40 @@ public class ReservationService {
         }
     }
 
-    public UserReservationEntity updateUsedSize(Integer id, Integer usedSize) {
-        UserReservationEntity reservationEntity = reservationRepository.findById(id)
+    public void addUsedSize(UserEntity user, Integer usedSize) {
+        var reservationEntity = reservationRepository.findByUserId(user)
                 .orElseThrow(() -> new IllegalStateException("you not demanded size"));
 
         if (usedSize != null) {
-            reservationEntity.setUsedSize(usedSize);
+            var size = reservationEntity.getUsedSize() + usedSize;
+            reservationEntity.setUsedSize(size);
         }
-        return reservationRepository.save(reservationEntity);
+        if (reservationEntity.getActivated() && reservationEntity.getUsedSize() < reservationEntity.getTotalSize()) {
+            reservationRepository.save(reservationEntity);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "you don't have size!");
+        }
     }
 
+    public void deleteUsedSize(UserEntity user, Integer usedSize) {
+        UserReservationEntity reservationEntity = reservationRepository.findByUserId(user)
+                .orElseThrow(() -> new IllegalStateException("you not demanded size"));
+
+        if (usedSize != null) {
+            var size = reservationEntity.getUsedSize() - usedSize;
+            reservationEntity.setUsedSize(size);
+        }
+        if (reservationEntity.getActivated() && reservationEntity.getUsedSize() < reservationEntity.getTotalSize()) {
+            reservationRepository.save(reservationEntity);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "you don't have size!");
+        }
+    }
     public UserReservationEntity activateSize(Integer id) {
         UserEntity user = userRepository.getReferenceById(id);
-        UserReservationEntity userReservation = reservationRepository.findByUserId(user).orElseThrow(() -> new IllegalStateException("Not activated"));
-        userReservation.setActivated(true);
-        return reservationRepository.save(userReservation);
+        UserReservationEntity reservationEntity = reservationRepository.findByUserId(user).orElseThrow(() -> new IllegalStateException("Not activated"));
+        reservationEntity.setActivated(true);
+        return reservationRepository.save(reservationEntity);
     }
 
 }

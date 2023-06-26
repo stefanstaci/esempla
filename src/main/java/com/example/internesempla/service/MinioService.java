@@ -89,8 +89,8 @@ public class MinioService {
         storageFile.setCreatedBy((UserEntity) auth.getPrincipal());
         storageFile.setCreatedDate(LocalDate.now());
         var exist = storageFileRepository.findByPath(storageFile.getPath());
-
         if (exist.isEmpty()) {
+            reservationService.addUsedSize(((UserEntity) auth.getPrincipal()), storageFile.getSize());
             storageFileRepository.save(storageFile);
         }
 
@@ -110,9 +110,9 @@ public class MinioService {
         try {
             if (havePermission || isAdmin) {
                 stream = minioClient.getObject(GetObjectArgs.builder()
-                    .bucket(applicationProprieties.getBucketName())
-                    .object(filename)
-                    .build());
+                        .bucket(applicationProprieties.getBucketName())
+                        .object(filename)
+                        .build());
             } else {
                 logger.info("not permission for downloading file");
                 throw new NoPermissionException();
@@ -135,6 +135,8 @@ public class MinioService {
                         .bucket(applicationProprieties.getBucketName())
                         .object(filename)
                         .build());
+                StorageFileEntity storageFile = storageFileRepository.findByName(filename);
+                reservationService.deleteUsedSize(((UserEntity) auth.getPrincipal()), storageFile.getSize());
                 storageFileRepository.deleteByName(filename);
                 logger.info("file deleted");
             } else {
